@@ -35,6 +35,13 @@ const run =async ()=> {
 
     })
 
+    app.get("/product",async(req,res)=> {
+        const curosr = productCollection.find({})
+        const data = await curosr.toArray()
+        res.send(data)
+
+    })
+
     app.post("/categorie",async(req,res)=> {
         const data = req.body
         const cursor =await categorieCollection.insertOne(data)
