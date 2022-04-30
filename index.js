@@ -3,7 +3,7 @@ const app = express()
 const cors = require("cors")
 require('dotenv').config()
 const port = process.env.PORT ||5000
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
 
 
 // Middlewares
@@ -23,6 +23,7 @@ const run =async ()=> {
     await client.connect()
     console.log("database connected");
     const productCollection = client.db("warehouse").collection("products")
+    const categorieCollection = client.db("warehouse").collection("categorie")
 
     try {
     app.post("/product",async(req,res)=> {
@@ -32,6 +33,29 @@ const run =async ()=> {
         res.send(cursor)
         
 
+    })
+
+    app.post("/categorie",async(req,res)=> {
+        const data = req.body
+        const cursor =await categorieCollection.insertOne(data)
+        console.log(cursor);
+        res.send(cursor)
+
+    })
+
+    app.get("/categorie",async(req,res)=> {
+        const query = {}
+        const cursor = categorieCollection.find(query)
+        const data = await cursor.toArray()
+        res.send(data)
+
+    })
+    app.delete("/categorie/:id",async(req,res)=> {
+        const id = req.params.id
+        const data = await categorieCollection.deleteOne({_id:ObjectId(id)})
+        res.send(data)
+        console.log(data);
+        
     })
         
     } finally{
