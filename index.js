@@ -71,6 +71,26 @@ const run =async ()=> {
         res.send(data)
 
     })
+    app.get("/categorie/:id",async(req,res)=> {
+        const id = req.params.id
+        const data = await categorieCollection.findOne({_id:ObjectId(id)})
+
+        res.send(data)
+        console.log(data);
+    })
+    app.put("/categorie/:id",async(req,res)=> {
+        const id = req.params.id
+        const data = req.body
+        const query = {_id:ObjectId(id)}
+        const options = { upsert: true };
+        const docs = {
+            $set:{categorie:data.categorie}
+        }
+
+        const updatedData =await categorieCollection.updateOne(query,docs,options)
+        res.send(updatedData)
+        console.log(updatedData);
+    })
     app.delete("/categorie/:id",async(req,res)=> {
         const id = req.params.id
         const data = await categorieCollection.deleteOne({_id:ObjectId(id)})
