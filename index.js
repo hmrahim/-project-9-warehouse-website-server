@@ -42,6 +42,14 @@ const run =async ()=> {
 
     })
 
+    app.delete("/product/:id",async(req,res)=> {
+        const id = req.params.id
+        const deletedData = await productCollection.deleteOne({_id:ObjectId(id)})
+        res.send(deletedData)
+        console.log(deletedData);
+
+    })
+
     app.post("/categorie",async(req,res)=> {
         const data = req.body
         const cursor =await categorieCollection.insertOne(data)
