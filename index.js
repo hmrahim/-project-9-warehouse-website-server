@@ -35,6 +35,33 @@ const run =async ()=> {
 
     })
 
+    app.put("/product/:id",async(req,res)=> {
+        const data = req.body
+        const id = req.params.id
+        const filter = {_id:ObjectId(id)}
+        const option = {upsert:true}
+        const docs = {
+            $set:{
+                title:data.title,
+                unit : data.unit,
+                categorie:data.categorie,
+                price:data.price,
+                quantity:data.quantity,
+                link:data.link,
+                desc:data.desc
+
+            }
+
+
+        }
+
+        const updateResult =await productCollection.updateOne(filter,docs,option)
+        res.send(updateResult)
+        console.log(updateResult);
+        
+
+    })
+
     app.get("/product",async(req,res)=> {
         const curosr = productCollection.find({})
         const data = await curosr.toArray()
