@@ -41,6 +41,12 @@ const run =async ()=> {
         res.send(data)
 
     })
+    app.get("/product/:id",async(req,res)=> {
+        const id = req.params.id
+        const data = await productCollection.findOne({_id:ObjectId(id)})
+        res.send(data)
+        console.log(data);
+    })
 
     app.delete("/product/:id",async(req,res)=> {
         const id = req.params.id
