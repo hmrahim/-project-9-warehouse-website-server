@@ -24,6 +24,8 @@ const run =async ()=> {
     console.log("database connected");
     const productCollection = client.db("warehouse").collection("products")
     const categorieCollection = client.db("warehouse").collection("categorie")
+    const orderCollection = client.db("warehouse").collection("order")
+    
 
     try {
     app.post("/product",async(req,res)=> {
@@ -124,6 +126,14 @@ const run =async ()=> {
         res.send(data)
         console.log(data);
         
+    })
+
+    app.post("/order",async(req,res)=> {
+        const data  = req.body
+        console.log("data",data);
+        const cursor = await orderCollection.insertOne(data)
+        res.send(cursor)
+        console.log(cursor);
     })
         
     } finally{
