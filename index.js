@@ -59,7 +59,7 @@ const run =async ()=> {
 
         const updateResult =await productCollection.updateOne(filter,docs,option)
         res.send(updateResult)
-        console.log(updateResult);
+       // console.log(updateResult);
         
 
     })
@@ -74,14 +74,14 @@ const run =async ()=> {
         const id = req.params.id
         const data = await productCollection.findOne({_id:ObjectId(id)})
         res.send(data)
-        console.log(data);
+        //console.log(data);
     })
 
     app.delete("/product/:id",async(req,res)=> {
         const id = req.params.id
         const deletedData = await productCollection.deleteOne({_id:ObjectId(id)})
         res.send(deletedData)
-        console.log(deletedData);
+        //console.log(deletedData);
 
     })
 
@@ -105,7 +105,7 @@ const run =async ()=> {
         const data = await categorieCollection.findOne({_id:ObjectId(id)})
 
         res.send(data)
-        console.log(data);
+       // console.log(data);
     })
     app.put("/categorie/:id",async(req,res)=> {
         const id = req.params.id
@@ -118,13 +118,13 @@ const run =async ()=> {
 
         const updatedData =await categorieCollection.updateOne(query,docs,options)
         res.send(updatedData)
-        console.log(updatedData);
+       // console.log(updatedData);
     })
     app.delete("/categorie/:id",async(req,res)=> {
         const id = req.params.id
         const data = await categorieCollection.deleteOne({_id:ObjectId(id)})
         res.send(data)
-        console.log(data);
+       // console.log(data);
         
     })
 
@@ -133,7 +133,35 @@ const run =async ()=> {
         console.log("data",data);
         const cursor = await orderCollection.insertOne(data)
         res.send(cursor)
-        console.log(cursor);
+       // console.log(cursor);
+    })
+
+    app.post("/updateqty/:id",async(req,res)=> {
+        const id = req.params.id
+        const data = req.body
+        const filter = {_id:ObjectId(id)}
+        const option = {upsert:true}
+        const doc = {
+            $set:{
+                quantity:data.finalQty
+            }
+        }
+
+       const updatedData =await productCollection.updateOne(filter,doc,option)
+    //     console.log(updatedData);
+    //    console.log(data.finalQty);
+        
+        
+    })
+
+    app.get("/getproductbyemail",async(req,res)=> {
+        const email = req.query.email
+        const query = {email:email}
+        const curosr = productCollection.find(query)
+        const data = await curosr.toArray()
+        res.send(data)
+        
+
     })
         
     } finally{
