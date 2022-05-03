@@ -4,6 +4,7 @@ const cors = require("cors")
 require('dotenv').config()
 const port = process.env.PORT ||5000
 const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
+const jwt = require("jsonwebtoken")
 
 
 // Middlewares
@@ -29,10 +30,22 @@ const run =async ()=> {
 
     try {
     app.post("/product",async(req,res)=> {
+        const header = req.headers.authorization
+        const [email,token] = header.split(" ")
+      const decoded = verifyToken(token)
+      if(email === decoded.email){
         const data = req.body
         const cursor = await productCollection.insertOne(data)
-        console.log(cursor);
+       console.log(cursor);
         res.send(cursor)
+
+      }else{
+          console.log("unauthorize user");
+          res.send("unauthorize user")
+      }
+      
+
+        
         
 
     })
@@ -65,12 +78,22 @@ const run =async ()=> {
     })
 
     app.get("/product",async(req,res)=> {
+        const header = req.headers.authorization
+        const [email,token] = header.split(" ")
+      const decoded = verifyToken(token)
+       //const decoded = jwt.verify(token,process.env.SECRET)
+       console.log("decoded data",decoded.email);
+
         const curosr = productCollection.find({})
         const data = await curosr.toArray()
         res.send(data)
 
     })
     app.get("/product/:id",async(req,res)=> {
+        const header = req.headers.authorization
+        const [email,token] = header.split(" ")
+      const decoded = verifyToken(token)
+
         const id = req.params.id
         const data = await productCollection.findOne({_id:ObjectId(id)})
         res.send(data)
@@ -163,6 +186,13 @@ const run =async ()=> {
         
 
     })
+
+    app.post("/privetapi",(req,res)=> {
+        const email = req.body
+        const token = jwt.sign(email, process.env.SECRET);
+        res.send(token)
+        console.log("token ",token);
+    })
         
     } finally{
 
@@ -184,3 +214,20 @@ app.get("/",(req,res)=> {
 app.listen(port ,()=> {
     console.log("server started on port 5000");
 })
+
+
+const verifyToken = (token)=> {
+    let email;
+    jwt.verify(token, process.env.SECRET, function(err, decoded) {
+        if(err){
+            email = "invalid email"
+
+        }
+        if(decoded){
+            email = decoded
+            
+        }
+        
+      });
+      return email
+}
