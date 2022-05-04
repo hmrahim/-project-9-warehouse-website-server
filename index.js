@@ -40,7 +40,7 @@ const run =async ()=> {
         res.send(cursor)
 
       }else{
-          console.log("unauthorize user");
+         // console.log("unauthorize user");
           res.send("unauthorize user")
       }
       
