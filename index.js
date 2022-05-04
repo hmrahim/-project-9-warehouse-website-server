@@ -30,19 +30,20 @@ const run =async ()=> {
 
     try {
     app.post("/product",async(req,res)=> {
-        const header = req.headers.authorization
-        const [email,token] = header.split(" ")
-      const decoded = verifyToken(token)
-      if(email === decoded.email){
         const data = req.body
         const cursor = await productCollection.insertOne(data)
        console.log(cursor);
         res.send(cursor)
+      //  const header = req.headers.authorization
+     //   const [email,token] = header.split(" ")
+    //   const decoded = verifyToken(token)
+    //   if(email === decoded.email){
+   
 
-      }else{
-          console.log("unauthorize user");
-          res.send("unauthorize user")
-      }
+    //   }else{
+    //       console.log("unauthorize user");
+    //       res.send("unauthorize user")
+    //   }
       
 
         
