@@ -86,10 +86,6 @@ const run =async ()=> {
 
     })
     app.get("/product/:id",async(req,res)=> {
-        const header = req.headers.authorization
-        const [email,token] = header.split(" ")
-      const decoded = verifyToken(token)
-
         const id = req.params.id
         const data = await productCollection.findOne({_id:ObjectId(id)})
         res.send(data)
