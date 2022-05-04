@@ -79,11 +79,7 @@ const run =async ()=> {
 
     app.get("/product",async(req,res)=> {
         const header = req.headers.authorization
-        const [email,token] = header.split(" ")
-      const decoded = verifyToken(token)
-       //const decoded = jwt.verify(token,process.env.SECRET)
-       console.log("decoded data",decoded.email);
-
+      
         const curosr = productCollection.find({})
         const data = await curosr.toArray()
         res.send(data)
