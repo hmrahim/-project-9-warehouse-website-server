@@ -26,6 +26,7 @@ const run =async ()=> {
     const productCollection = client.db("warehouse").collection("products")
     const categorieCollection = client.db("warehouse").collection("categorie")
     const orderCollection = client.db("warehouse").collection("order")
+    const blogCollection = client.db("warehouse").collection("blog")
     
 
     try {
@@ -185,6 +186,55 @@ const run =async ()=> {
         const token = jwt.sign(email, process.env.SECRET);
         res.send(token)
         console.log("token ",token);
+    })
+
+    app.post("/blog",async(req,res) => {
+        const data = req.body
+        const insertedData = await blogCollection.insertOne(data)
+        res.send(insertedData)
+       // console.log(data);
+        
+    })
+
+    app.get("/blog",async(req,res)=> {
+        const cursor = blogCollection.find({})
+        const data =await  cursor.toArray()
+        res.send(data)
+
+    })
+
+    app.delete("/blog/:id",async(req,res)=> {
+        const id = req.params.id
+        const query = {_id:ObjectId(id)}
+        const data = await blogCollection.deleteOne(query)
+       res.send(data)
+        console.log(data);
+
+    })
+
+    app.get("/blog/:id",async(req,res)=> {
+        const id = req.params.id
+        const data = await blogCollection.findOne({_id:ObjectId(id)})
+        res.send(data)
+
+    })
+
+    app.put("/blog/:id",async(req,res)=> {
+        const id = req.params.id
+        const filter = {_id:ObjectId(id)}
+        const option = {upsert:true}
+        const data = req.body
+        const docs = {
+            $set:{
+                title:data.title,
+                desc: data.desc
+            }
+        }
+        const updatedData = await blogCollection.updateOne(filter,docs,option)
+        res.send(updatedData)
+        console.log(updatedData);
+        
+
     })
         
     } finally{
